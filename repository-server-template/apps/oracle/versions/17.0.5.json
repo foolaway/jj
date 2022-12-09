@@ -1,0 +1,35 @@
+[
+      {
+        "version": "17.0.5",
+        "os": "Windows",
+        "arch": "x64",
+        "dist": "zip",
+        "checksum": {
+          "algo": "sha256",
+          "content": "8a6a01aec7df97c4c4d8b3602763413164c12d066319ae81d0a74ae09b85e594"
+        },
+        "file": "https://download.oracle.com/java/19/latest/jdk-19_windows-x64_bin.zip"
+      },
+      {
+        "version": "17.0.5",
+        "os": "Windows",
+        "arch": "x64",
+        "dist": "exe",
+        "checksum": {
+          "algo": "sha256",
+          "content": "5beba90d58018b0d532411a3f9b3cce60643f60d94e98ab6c8dfd1cba950a55a"
+        },
+        "file": "https://download.oracle.com/java/19/latest/jdk-19_windows-x64_bin.exe "
+      },
+      {
+        "version": "17.0.5",
+        "os": "Windows",
+        "arch": "x64",
+        "dist": "msi",
+        "checksum": {
+          "algo": "sha256",
+          "content": "1ec2ebe62ecb4aa76e8ec5039e6031c7e999332562e0bb668f9394eb7592fb13"
+        },
+        "file": "https://download.oracle.com/java/19/latest/jdk-19_windows-x64_bin.msi "
+      }
+]
