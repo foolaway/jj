@@ -30,7 +30,8 @@ class Cache:
         elif system_type == "Darwin":
             self.__cache_file_path = "/usr/local/jjvmm/Cache/"
         elif system_type == "Windows":
-            self.__cache_file_path = self.__cache_file_windows_tpl.format(system_type)
+            system_root = os.getenv("SystemDrive", default="C:")
+            self.__cache_file_path = self.__cache_file_windows_tpl.format(system_root)
 
     @staticmethod
     def get_file_by_app(file_id: str):
@@ -38,7 +39,6 @@ class Cache:
         Cache.__init__system_type()
         return Cache.__cache_file_path + file_id
 
-        pass
 
     @staticmethod
     def get_store_time(name: str) -> str:
@@ -47,10 +47,12 @@ class Cache:
         :param name:
         :return:
         """
-        file_time = name.split("-")
-        file_time = file_time[-1].split(".")
-        return file_time[0]
-        pass
+        if name in Cache.scan_caches():
+            file_time = name.split("-")
+            file_time = file_time[-1].split(".")
+            return file_time[0]
+        else:
+            raise CachedFileDoesNotExist("The {} is does not exist.".format(name))
 
     @staticmethod
     def get_file_id(name: str) -> str:
@@ -59,9 +61,12 @@ class Cache:
         :param name:
         :return:
         """
-        file_time = name.split("-")
-        return file_time[0]
-        pass
+        if name in Cache.scan_caches():
+            file_time = name.split("-")
+            return file_time[0]
+
+        else:
+            raise CachedFileDoesNotExist("The {} is does not exist.".format(name))
 
     @staticmethod
     def scan_caches() -> tuple:
@@ -90,7 +95,7 @@ class Cache:
         if name in Cache.scan_caches():
             os.remove(Cache.__cache_file_path + name)
         else:
-            raise CachedFileDoesNotExist("The {} is does not exist." .format(name))
+            raise CachedFileDoesNotExist("The {} is does not exist.".format(name))
 
     @staticmethod
     def auto_remove_cache() -> int:
