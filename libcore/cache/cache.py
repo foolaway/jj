@@ -8,6 +8,7 @@ import time
 
 from libcore.config.config import Config
 from libcore.exception.cached_file_does_not_exist import CachedFileDoesNotExist
+from libcore.exception.not_support_system_type_exception import NotSuppotSytemTypeException
 
 
 class Cache:
@@ -19,26 +20,41 @@ class Cache:
 
     # __cache_name_tpl = "{fileid}###{year}#{month}#{day}{file_ext}"
 
-    __cache_file_windows_tpl = " {SystemRoot}\\ProgramData\\jjvmm\\cache\\"
+    __cache_file_windows_tpl = "{SystemRoot}\\ProgramData\\jjvmm\\cache\\"
 
     __cache_file_path = None
 
-    def __init__system_type(self):
-        system_type = self.Config.__init_system_info()
+    #   判断系统
+    @staticmethod
+    def __init__system_type():
+        system_type = platform.system()
         if system_type == "Linux":
-            self.__cache_file_path = " /usr/local/jjvmm/Cache/"
+            Cache.__cache_file_path = " /usr/local/jjvmm/Cache/"
         elif system_type == "Darwin":
-            self.__cache_file_path = "/usr/local/jjvmm/Cache/"
+            Cache.__cache_file_path = "/usr/local/jjvmm/Cache/"
         elif system_type == "Windows":
-            system_root = os.getenv("SystemDrive", default="C:")
-            self.__cache_file_path = self.__cache_file_windows_tpl.format(system_root)
+            system_root = os.getenv("SystemDrive", default="C")
+
+            Cache.__cache_file_path = Cache.__cache_file_windows_tpl.format(SystemRoot=system_root)
+
+        else:
+            raise NotSuppotSytemTypeException("Unrecognized operating system.")
+
+    # 创建缓存目录
+    @staticmethod
+    def catalogue():
+        Cache.__init__system_type()
+        word_name = os.path.exists(Cache.__cache_file_path)
+        if not word_name:
+            os.makedirs(Cache.__cache_file_path)
 
     @staticmethod
-    def get_file_by_app(file_id: str):
-
+    def get_file_by_app():
+        """
+        :return: 返回缓存文件路径路径
+        """
         Cache.__init__system_type()
-        return Cache.__cache_file_path + file_id
-
+        return Cache.__cache_file_path
 
     @staticmethod
     def get_store_time(name: str) -> str:
@@ -49,7 +65,8 @@ class Cache:
         """
         if name in Cache.scan_caches():
             file_time = name.split("-")
-            file_time = file_time[-1].split(".")
+            file_time = file_time[-2]+'-'+file_time[-1]
+            file_time = file_time.split(".")
             return file_time[0]
         else:
             raise CachedFileDoesNotExist("The {} is does not exist.".format(name))
@@ -138,4 +155,8 @@ class Cache:
 
 
 if __name__ == '__main__':
+ #   Cache.catalogue()
+ #   a=Cache.get_store_time('jdk-oracle-17.0.5-20221214-225037.zip')
+  #  print(a)
+
     pass
